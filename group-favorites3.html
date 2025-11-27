@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Group Favorites</title>
+<style>
+/* --- Root body styles --- */
+body {
+  color: #000;
+  background: radial-gradient(circle at 20% 30%, #800000, transparent 40%),
+              radial-gradient(circle at 70% 60%, #b22222, transparent 50%),
+              radial-gradient(circle at 50% 80%, #ff3333, transparent 50%),
+              radial-gradient(circle at 30% 70%, #d3d3d3, transparent 60%),
+              radial-gradient(circle at 80% 20%, #ffffff, transparent 40%);
+  background-size: 200% 200%;
+  animation: gradientMove 15s ease infinite;
+}
+
+.favorites-container {
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 30px;
+  border-radius: 20px;
+  background: radial-gradient(circle at 30% 30%, #ffffff, transparent 60%),
+              radial-gradient(circle at 70% 70%, #d3d3d3, transparent 60%),
+              radial-gradient(circle at 50% 50%, #ff3333, transparent 50%),
+              radial-gradient(circle at 60% 20%, #b22222, transparent 50%),
+              radial-gradient(circle at 20% 80%, #800000, transparent 50%);
+  background-size: 200% 200%;
+  animation: gradientMove 15s ease infinite;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+  transition: filter 0.3s ease;
+}
+
+body.dark-mode {
+  color: #fff;
+  background: radial-gradient(circle at 20% 30%, #000000, transparent 40%),
+              radial-gradient(circle at 70% 60%, #555555, transparent 50%),
+              radial-gradient(circle at 50% 80%, #1a1a4d, transparent 50%),
+              radial-gradient(circle at 30% 70%, #330033, transparent 60%),
+              radial-gradient(circle at 80% 20%, #ff3399, transparent 40%);
+  background-size: 200% 200%;
+  animation: gradientMove 20s ease infinite;
+}
+
+body.dark-mode .favorites-container {
+  background: radial-gradient(circle at 30% 30%, #555555, transparent 60%),
+              radial-gradient(circle at 70% 70%, #000000, transparent 60%),
+              radial-gradient(circle at 50% 50%, #1a1a4d, transparent 50%),
+              radial-gradient(circle at 60% 20%, #330033, transparent 50%),
+              radial-gradient(circle at 20% 80%, #ff3399, transparent 50%);
+  background-size: 200% 200%;
+  animation: gradientMove 20s ease infinite;
+}
+
+@keyframes gradientMove {
+  0% { background-position: 0% 0%, 50% 50%, 100% 0%, 0% 100%, 100% 100%; }
+  50% { background-position: 100% 100%, 0% 0%, 50% 100%, 100% 0%, 0% 50%; }
+  100% { background-position: 0% 0%, 50% 50%, 100% 0%, 0% 100%, 100% 100%; }
+}
+
+.favorites-container h1 {
+  text-align: center;
+  margin-bottom: 40px;
+  font-size: 2.5rem;
+  color: #fff;
+  text-shadow: 2px 2px 8px rgba(0,0,0,0.6);
+}
+
+.songs-row {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 40px;
+  overflow-x: auto;
+  padding-bottom: 10px;
+}
+.songs-row::-webkit-scrollbar { display: none; }
+
+.song-card {
+  width: 250px;
+  border-radius: 16px;
+  overflow: hidden;
+  background: rgba(0,0,0,0.5);
+  text-align: center;
+  padding-bottom: 15px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+}
+
+.song-card img { width: 100%; display: block; }
+.song-card audio { width: 90%; margin: 10px auto; display: block; }
+
+.lyrics-btn, .movie-btn {
+  background: rgba(255,255,255,0.2);
+  color: #fff;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 10px;
+  margin-top: 8px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.lyrics-btn:hover, .movie-btn:hover { background: rgba(255,255,255,0.4); }
+
+.movie-card {
+  width: 80%;
+  max-width: 700px;
+  margin: 0 auto;
+  border-radius: 16px;
+  background: rgba(0,0,0,0.5);
+  padding: 15px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+}
+.movie-card img { width: 100%; border-radius: 12px; margin-bottom: 10px; }
+.movie-card video { width: 100%; border-radius: 10px; }
+
+#theme-toggle {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+  border-radius: 50%;
+  cursor: pointer;
+  backdrop-filter: blur(5px);
+  padding: 10px 14px;
+  font-size: 18px;
+  background: rgba(255,255,255,0.85);
+  color: #000;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  transition: 0.3s;
+}
+#theme-toggle:hover { background: rgba(255,255,255,1); transform: translateY(-2px); }
+body.dark-mode #theme-toggle { background: rgba(0,0,0,0.6); color: #fff; }
+body.dark-mode #theme-toggle:hover { background: rgba(0,0,0,0.8); }
+
+.back-portfolio-btn-container { text-align: center; margin-bottom: 30px; }
+.back-portfolio-btn {
+  background: linear-gradient(90deg, #800000, #b22222);
+  color: #fff;
+  padding: 12px 20px;
+  border-radius: 12px;
+  font-weight: bold;
+  text-decoration: none;
+  transition: 0.3s ease;
+}
+.back-portfolio-btn:hover { opacity: 0.9; }
+body.dark-mode .back-portfolio-btn { background: #000; color: #fff; }
+
+.song-title { font-size: 16px; font-weight: bold; margin-top: 10px; color: #fff; text-shadow: 1px 1px 4px rgba(0,0,0,0.6); }
+
+/* --- Centered floating panel with blur --- */
+.lyrics-panel {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.95);
+  width: 80%;
+  max-width: 600px;
+  max-height: 80vh;
+  background: rgba(255, 255, 255, 0.7);
+  color: #000;
+  padding: 25px;
+  border-radius: 20px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+  z-index: 99999;
+  overflow-y: auto;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease, transform 0.3s ease, backdrop-filter 0.3s ease;
+  backdrop-filter: blur(0px);
+}
+.lyrics-panel.dark-mode { background: rgba(0,0,0,0.65); color: #fff; }
+.lyrics-panel.active {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate(-50%, -50%) scale(1);
+  backdrop-filter: blur(8px);
+}
+
+.close-lyrics {
+  background: none;
+  border: none;
+  font-size: 24px;
+  font-weight: bold;
+  float: right;
+  cursor: pointer;
+  color: inherit;
+}
+
+.favorites-container.blur { filter: blur(5px); transition: filter 0.3s ease; }
+</style>
+</head>
+<body>
+
+<button id="theme-toggle" title="Toggle Dark/Light Mode">🌙</button>
+
+<div class="back-portfolio-btn-container">
+  <a href="member-portfolio3.html" class="back-portfolio-btn">Back to My Portfolio</a>
+</div>
+
+<div class="favorites-container" id="mainContent">
+  <h1>Our Favorite Songs & Movie Trailer</h1>
+
+  <div class="songs-row">
+
+<div class="song-card">
+  <img src="songs/gab1.jpeg" alt="Song 1 Cover">
+  <h3 class="song-title">Pierce The Veil by A Match Into Water</h3>
+  <audio controls>
+    <source src="songs/song10.mp3" type="audio/mpeg">
+  </audio>
+
+  <div class="lyrics-content" style="display:none;">
+<p>I kissed the scars on her skin<br>
+    I still think you're beautiful<br>
+    And I don't ever wanna lose my best friend.<br>
+    I screamed out, "God, you vulture (you vulture),<br>
+    Bring her back or take me with her."</p>
+    
+    <p>Tear it down, break the barricade<br>
+    I want to see what sound it makes<br>
+    I hate this flavor with a passion and I fucking hate the aftertaste</p>
+    
+    <p>How does it feel? (How does it feel?)<br>
+    How does it feel? Well it feels like I'm on fire!<br>
+    Wake up, I know you can hear me.</p>
+    
+    <p>Make me a promise here tonight, love like a tidal wave<br>
+    Dreamless in early graves, I never want it to be this way<br>
+    The chemicals will bring you home again<br>
+    This is it, when it's done, we can say that,<br>
+    When it's sudden death we fight back<br>
+    (Oh, yeah)</p>
+    
+    <p>Pretend like I don't entice you<br>
+    I've seen you circling the sky above my head<br>
+    You traitor</p>
+    
+    <p>I will never be taken for granted again<br>
+    Keep digging holes in the desert<br>
+    Say a prayer for you</p>
+    
+    <p>I know that you're in pain<br>
+    But if we die at the same time does it still scare you?</p>
+    
+    <p>Make me a promise here tonight. Let's go!<br>
+    Dreamless in early graves, I never want it to be this way<br>
+    The chemicals will bring you home again<br>
+    This is it, when it's done, we can say that,<br>
+    Oh my God we're not gonna make it</p>
+    
+    <p>We will bring the tidal wave<br>
+    We will bring the tidal wave<br>
+    We will bring the tidal wave<br>
+    We will bring the tidal wave!</p>
+    
+    <p>We will bring the tidal wave<br>
+    We will bring the tidal wave<br>
+    We will bring the tidal wave<br>
+    And nothing will remain</p>
+    
+    <p>She's mine<br>
+    You stay away from her<br>
+    It's not her time.<br>
+    'Cause, baby, I'm the one<br>
+    Who haunts her dreams at night,<br>
+    Until she's satisfied.</p>
+    
+    <p>Make me a promise here tonight, love like a tidal wave<br>
+    Dreamless in early graves, I never want it to be this way<br>
+    The chemicals will bring you home again<br>
+    This is it, when it's done, we can say that,<br>
+    When it's sudden death we fight back!</p>
+    
+    <p>Go!</p>
+    
+    <p>Fuck it!</p>
+  </div>
+
+  <button class="lyrics-btn" onclick="showLyricsFromDiv(this)">Show Lyrics</button>
+</div>
+
+    <!-- SONG 2 -->
+    <div class="song-card">
+      <img src="songs/gab2.jpeg" alt="Song 2 Cover">
+      <h3 class="song-title">Pierce The Veil by Today I Saw The Whole World</h3>
+      <audio controls>
+        <source src="songs/song11.mp3" type="audio/mpeg">
+      </audio>
+
+<div class="lyrics-content" style="display:none;">
+<p>Baby, pour over<br>
+    Tell me, are we concrete?<br>
+    What would you do without my perfect company to your undressed spine?<br>
+    And I can hear you drag behind my car by your broken legs<br>
+    Swallowing stitches in her sleep<br>
+    As she stole my only view, may I never blink</p>
+    
+    <p>While you stood over the pavement<br>
+    I was biting the curb<br>
+    Sick entertainment<br>
+    But I'll bet it feels good coming down<br>
+    Can't bear to wash out the wasted time<br>
+    Between your lips and mine</p>
+    
+    <p>Zero friends<br>
+    Followed your voices into a sea of crosses<br>
+    She blends in with the foxes gold and feels like home<br>
+    Under the surface, my love<br>
+    But beware, beware, beware</p>
+    
+    <p>And take it slow tonight<br>
+    We're on the other side of the road<br>
+    I think we're bleeding out</p>
+    
+    <p>While you stood over the pavement<br>
+    I was biting the curb<br>
+    Sick entertainment<br>
+    But I'll bet it feels good coming down<br>
+    Can't bear to wash out the wasted time<br>
+    Between our lips</p>
+    
+    <p>So c'mon and swing it back and forth just like<br>
+    My heart is on a pendulum tonight<br>
+    If your lungs are mine I only wanna watch your clouds linger in the darkness</p>
+    
+    <p>Oh, can't you feel it?<br>
+    You're feeding on my restless soul<br>
+    Oh, can't you see that<br>
+    It's never enough, it's never enough<br>
+    Oh, can't you feel it?<br>
+    You feed on my restless soul<br>
+    Oh, can you see that<br>
+    It's never enough, it's never enough</p>
+    
+    <p>Today I saw the whole world<br>
+    And I think heaven has a plot to take my life<br>
+    Listen, I'm the one who made you<br>
+    I'll be the one who brings you down<br>
+    But this will be the last time</p>
+    
+    <p>Bite on the curb<br>
+    Oh, sick entertainment<br>
+    I'll bet it feels good when you're coming down<br>
+    Can't bear to wash out the wasted time<br>
+    Between our lips</p>
+    
+    <p>So c'mon and swing it back and forth just like<br>
+    My heart is on a pendulum tonight<br>
+    If your lungs are mine<br>
+    I only wanna watch your clouds linger in the darkness</p>
+    
+    <p>Oh, oh, oh, oh, oh<br>
+    Sing it one more time<br>
+    Oh, oh, oh, oh, oh</p>
+  </div>
+
+      <button class="lyrics-btn" onclick="showLyricsFromDiv(this)">Show Lyrics</button>
+    </div>
+
+    <!-- SONG 3 -->
+    <div class="song-card">
+      <img src="songs/gab3.jpeg" alt="Song 3 Cover">
+      <h3 class="song-title">Sleeping With Sirens by If I'm James Dean, You're Audrey Hepburn</h3>
+      <audio controls>
+        <source src="songs/song12.mp3" type="audio/mpeg">
+      </audio>
+
+<div class="lyrics-content" style="display:none;">
+<p>Stay for tonight if you want to<br>
+    I can show you what my dreams are made of<br>
+    As I'm dreamin' of your face<br>
+    I've been away for a long time<br>
+    Such a long time, and I miss you there<br>
+    I can't imagine bein' anywhere else<br>
+    I can't imagine bein' anywhere else but here</p>
+    
+    <p>How the hell did you ever pick me?<br>
+    Honestly, I could sing you a song<br>
+    But I don't think words can express your beauty<br>
+    It's singing to me</p>
+    
+    <p>How the hell did we end up like this?<br>
+    You bring out the beast in me<br>
+    I fell in love from the moment we kissed<br>
+    Since then, we've been history</p>
+    
+    <p>They say that love is forever<br>
+    Your forever is all that I need (it's all that I need)<br>
+    Please stay as long as you need<br>
+    Can't promise that things won't be broken<br>
+    But I swear that I will never leave (I will never leave)<br>
+    Please stay forever with me</p>
+    
+    <p>It goes to show, I hope that you know that you are<br>
+    What my dreams are made of<br>
+    Can't fall asleep, can't fall asleep<br>
+    I lie in my bed awake, in my bed awake at night<br>
+    As I dream of you<br>
+    I'll fall in love, you'll fall in love<br>
+    It could mean everything, everything to me<br>
+    I can't imagine bein' anywhere else</p>
+    
+    <p>They say that love is forever<br>
+    Your forever is all that I need (it's all that I need)<br>
+    Please stay as long as you need<br>
+    Can't promise that things won't be broken<br>
+    But I swear that I will never leave (I will never leave)<br>
+    Please stay forever with me</p>
+    
+    <p>The way that we are is the reason I stay<br>
+    As long as you're here with me, I know I'll be okay<br>
+    The way that we are is the reason I stay<br>
+    As long as you're here with me, I know I'll be okay</p>
+    
+    <p>They say that love is forever<br>
+    Your forever is all that I need (it's all that I need)<br>
+    Please stay as long as you need<br>
+    Can't promise that things won't be broken<br>
+    But I swear that I will never leave (I will never leave)<br>
+    Please stay forever with me</p>
+    
+    <p>They say that love is forever<br>
+    (I was created to love just one, baby) Your forever is all that I need<br>
+    (I couldn't love just anyone)<br>
+    (I was created to love just one girl) Please stay as long as you need<br>
+    (I couldn't love just anyone) Can't promise that things won't be broken<br>
+    (I was created to love just one, baby) But I swear that I will never leave<br>
+    (I couldn't love just anyone)<br>
+    (I was created to love just one girl) Please stay forever with me</p>
+  </div>
+
+      <button class="lyrics-btn" onclick="showLyricsFromDiv(this)">Show Lyrics</button>
+    </div>
+
+  </div>
+
+  <!-- MOVIE -->
+  <div class="movie-card">
+    <img src="movies/gab.jpg" alt="Movie Poster">
+    <video id="movieTrailer" controls>
+      <source src="movies/ted.mp4" type="video/mp4">
+    </video>
+
+    <div class="lyrics-content" style="display:none;">
+<p>Title: School of Rock</p>
+    
+    <p>Year: 2003<br>
+    Genre: American comedy film</p>
+    
+    <p>Director: Richard Linklater<br>
+    Writer: Mike White<br>
+    Producer: Scott Rudin</p>
+    
+    <p>Starring: Jack Black, Joan Cusack, Mike White, and Sarah Silverman.</p>
+    
+    <p>Synopsis: Jack Black plays Dewey Finn, a struggling rock guitarist who gets fired from his band. He poses as a substitute teacher at a prestigious prep school and, after discovering the students' musical talent, forms a band of fifth-graders to win the upcoming Battle of the Bands and pay his rent.</p>
+    
+    <p>Box Office: Released on October 3, 2003, the film grossed $131 million worldwide on a $35 million budget. It was the highest-grossing music-themed comedy until 2015.</p>
+    
+    <p>Adaptations: The film received positive reviews, particularly for Black's performance and humor. It was adapted into a stage musical that opened on Broadway in December 2015, and a television adaptation that aired on Nickelodeon from 2016 to 2018.</p>
+  </div>
+
+    <button class="movie-btn" onclick="showLyricsFromDiv(this)">More Info</button>
+  </div>
+</div>
+
+<!-- FLOATING PANEL -->
+<div id="lyricsPanel" class="lyrics-panel">
+  <button class="close-lyrics" onclick="closeLyrics()">✕</button>
+  <h2 id="lyricsTitle"></h2>
+  <div id="lyricsText"></div>
+</div>
+
+<script>
+const toggleBtn = document.getElementById('theme-toggle');
+const mainContent = document.getElementById("mainContent");
+const lyricsPanel = document.getElementById("lyricsPanel");
+
+/* Load theme */
+if(localStorage.getItem("theme") === "dark") {
+  document.body.classList.add("dark-mode");
+  toggleBtn.textContent = "☀️";
+}
+
+toggleBtn.addEventListener("click", () => {
+  document.body.classList.toggle("dark-mode");
+  const isDark = document.body.classList.contains("dark-mode");
+  toggleBtn.textContent = isDark ? "☀️" : "🌙";
+  localStorage.setItem("theme", isDark ? "dark" : "light");
+  updateLyricsPanelTheme();
+});
+
+function updateLyricsPanelTheme() {
+  if(document.body.classList.contains("dark-mode")) {
+    lyricsPanel.classList.add("dark-mode");
+  } else {
+    lyricsPanel.classList.remove("dark-mode");
+  }
+}
+
+function showLyricsFromDiv(button){
+  const contentDiv = button.previousElementSibling;
+  const title = button.classList.contains("lyrics-btn") 
+                ? button.parentElement.querySelector(".song-title").textContent 
+                : "Movie Info";
+  document.getElementById("lyricsTitle").textContent = title;
+  document.getElementById("lyricsText").innerHTML = contentDiv.innerHTML;
+
+  lyricsPanel.classList.add("active");
+  mainContent.classList.add("blur");
+  updateLyricsPanelTheme();
+}
+
+function closeLyrics(){
+  lyricsPanel.classList.remove("active");
+  mainContent.classList.remove("blur");
+}
+
+// Select all audio players
+const allAudios = document.querySelectorAll("audio");
+
+// Select your movie trailer video  (CHANGE the ID if yours is different)
+const movieVideo = document.getElementById("movieTrailer");
+
+// --- Pause all other audio when one plays ---
+allAudios.forEach(audio => {
+  audio.addEventListener("play", () => {
+
+    // Pause all other audio
+    allAudios.forEach(other => {
+      if (other !== audio) {
+        other.pause();
+      }
+    });
+
+    // Pause video trailer when a song plays
+    if (movieVideo) {
+      movieVideo.pause();
+    }
+  });
+});
+
+
+// --- Pause ALL audio when the movie trailer plays ---
+if (movieVideo) {
+  movieVideo.addEventListener("play", () => {
+
+    allAudios.forEach(a => a.pause());
+  });
+}
+</script>
+
+</body>
+</html>

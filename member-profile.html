@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Member Profiles</title>
+<link rel="stylesheet" href="styles.css">
+
+<style>
+/* --- Root & dark mode colors --- */
+:root {
+  --text-color: #1a1a1a;
+  --bg-color: #ffffff;
+  --name-color: #800000;
+  --role-color: #2b2b2b;
+  --bio-color: #444;
+  --core-heading-color: #800000;
+  --core-text-color: #000;
+  --card-bg: #ffffff;
+}
+
+body.dark-mode {
+  --text-color: #ffffff;
+  --bg-color: #121212;
+  --name-color: #ffffff;
+  --role-color: #ffffff;
+  --bio-color: #ffffff;
+  --core-heading-color: #ffffff;
+  --core-text-color: #000;
+  --card-bg: rgba(211, 211, 211, 0.2); /* light grey low opacity for cards */
+}
+
+/* --- Body --- */
+body {
+  font-family: Arial, sans-serif;
+  background: var(--bg-color);
+  color: var(--text-color);
+  margin: 0;
+  padding: 140px 20px 40px;
+  transition: background 0.4s ease, color 0.4s ease;
+}
+
+/* --- Profiles grid --- */
+.profiles-wrapper {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 40px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 15px;
+}
+@media (max-width: 1024px) { .profiles-wrapper { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 760px) { .profiles-wrapper { grid-template-columns: 1fr; } }
+
+/* --- Profile card --- */
+.profile-container {
+  background: var(--card-bg);
+  color: var(--text-color);
+  padding: 30px 20px;
+  border-radius: 18px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+  text-align: center;
+  animation: fadeIn 0.7s ease-in-out;
+  transition: background 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+}
+.profile-container:hover { box-shadow: 0 14px 30px rgba(0,0,0,0.25); }
+
+.profile-pic {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #ccc;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+  margin-bottom: 15px;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.profile-pic:hover { transform: scale(1.05); box-shadow: 0 8px 25px rgba(0,0,0,0.2); }
+
+h1 { margin: 10px 0 5px; font-size: 22px; color: var(--name-color); }
+p { margin: 4px 0 16px; font-size: 14px; color: var(--role-color); }
+.divider { width: 70%; height: 2px; background: linear-gradient(90deg,#800000,#555); border-radius: 2px; margin: 16px auto; }
+.short-bio { font-size: 14px; color: var(--bio-color); line-height: 1.4; margin-top: 10px; padding: 0 10px; }
+
+.view-portfolio-btn {
+  display: inline-block;
+  margin-top: 18px;
+  background: linear-gradient(90deg, #800000, #D3D3D3);
+  color: #fff;
+  padding: 10px 16px;
+  border-radius: 12px;
+  font-weight: bold;
+  text-decoration: none;
+  letter-spacing: 0.5px;
+  transition: 0.25s ease;
+  box-shadow: 0 5px 14px rgba(0,0,0,0.15);
+}
+.view-portfolio-btn:hover { transform: translateY(-2px); opacity: 0.92; }
+
+.back-link {
+  display: inline-block;
+  margin-top: 12px;
+  font-size: 0.9rem;
+  color: #fff;
+  background-color: #800000;
+  padding: 8px 14px;
+  border-radius: 10px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: 0.3s ease, box-shadow 0.3s ease;
+}
+.back-link:hover { background-color: #a00000; box-shadow: 0 4px 12px rgba(0,0,0,0.3); transform: translateY(-2px); }
+
+/* --- Core Values Section --- */
+.core-values { 
+  text-align: center; 
+  margin: 60px 0; 
+}
+
+.core-values h2 { 
+  font-size: 2rem; 
+  color: var(--text-color); /* white in dark mode, black in light mode */
+  margin-bottom: 40px; 
+}
+
+.values-grid-vertical {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 25px;
+}
+
+.value-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  background: #FFFFFF; /* light grey low opacity for dark mode */
+  padding: 16px 24px;
+  border-radius: 12px;
+  width: 220px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+}
+
+.value-item:hover { 
+  transform: translateY(-4px); 
+  box-shadow: 0 8px 20px rgba(0,0,0,0.3); 
+}
+
+.value-item span { 
+  color: #000; /* always black, even in dark mode */
+  font-weight: bold; 
+  font-size: 1.2rem; 
+}
+
+.value-icon { 
+  width: 48px; 
+  height: 48px; 
+  object-fit: contain; 
+}
+
+
+/* --- Theme toggle button --- */
+#theme-toggle {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+  border-radius: 50%;
+  cursor: pointer;
+  backdrop-filter: blur(5px);
+  padding: 10px 14px;
+  font-size: 18px;
+  background: rgba(255,255,255,0.85);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+#theme-toggle:hover { background: rgba(255,255,255,1); transform: translateY(-2px); }
+body.dark-mode #theme-toggle { background: rgba(0,0,0,0.6); color: #fff; }
+body.dark-mode #theme-toggle:hover { background: rgba(0,0,0,0.8); }
+
+/* --- Animations --- */
+@keyframes fadeIn { from{opacity:0; transform:translateY(15px);} to{opacity:1; transform:translateY(0);} }
+</style>
+</head>
+<body>
+
+<!-- Theme toggle -->
+<button id="theme-toggle" aria-label="Toggle dark mode"><span id="theme-icon">🌙</span></button>
+
+<!-- Core Values -->
+<section class="core-values">
+  <h2>Our Core Values</h2>
+  <div class="values-grid-vertical">
+    <div class="value-item"><img src="images/innovation.png" class="value-icon" alt="Innovation"><span>Innovation</span></div>
+    <div class="value-item"><img src="images/excellence.png" class="value-icon" alt="Excellence"><span>Excellence</span></div>
+    <div class="value-item"><img src="images/integrity.png" class="value-icon" alt="Integrity"><span>Integrity</span></div>
+    <div class="value-item"><img src="images/collaboration.png" class="value-icon" alt="Collaboration"><span>Collaboration</span></div>
+    <div class="value-item"><img src="images/creativity.png" class="value-icon" alt="Creativity"><span>Creativity</span></div>
+    <div class="value-item"><img src="images/resilience.png" class="value-icon" alt="Resilience"><span>Resilience</span></div>
+  </div>
+</section>
+
+<!-- Profiles -->
+<div class="profiles-wrapper">
+    <!-- Profile 1 -->
+    <div class="profile-container">
+      <img src="images/profile1.jpg" alt="Member Photo" class="profile-pic">
+      <h1>Jeremy Kim R. Jovenal</h1>
+      <p>Leader</p>
+      <div class="divider"></div>
+      <p class="short-bio">Jeremy is the leader of Group Prime II, guiding the team and ensuring project success.</p>
+      <a href="member-portfolio.html" class="view-portfolio-btn">View Full Portfolio</a>
+      <br>
+      <a href="index.html" class="back-link">Back to Members</a>
+    </div>
+
+    <!-- Profile 2 -->
+    <div class="profile-container">
+      <img src="images/profile2.jpg" alt="Member Photo" class="profile-pic">
+      <h1>Margieleth Grace A. Ching</h1>
+      <p>Member</p>
+      <div class="divider"></div>
+      <p class="short-bio">Margieleth contributes her skills and creativity to every project the team undertakes.</p>
+      <a href="member-portfolio1.html" class="view-portfolio-btn">View Full Portfolio</a>
+      <br>
+      <a href="index.html" class="back-link">Back to Members</a>
+    </div>
+
+    <div class="profile-container">
+      <img src="images/profile3.jpg" alt="Member Photo" class="profile-pic">
+      <h1>Antonette B. Edic</h1>
+      <p>Member</p>
+      <div class="divider"></div>
+      <p class="short-bio">Antonette specializes in design and ensures the visual aspects of projects are top-notch.</p>
+      <a href="member-portfolio2.html" class="view-portfolio-btn">View Full Portfolio</a>
+      <br>
+      <a href="index.html" class="back-link">Back to Members</a>
+    </div>
+
+    <!-- Profile 3 -->
+    <div class="profile-container">
+      <img src="images/profile4.png" alt="Member Photo" class="profile-pic">
+      <h1>Ted Joaquim Gabriel L. de Gala</h1>
+      <p>Member</p>
+      <div class="divider"></div>
+      <p class="short-bio">Ted provides technical expertise and supports the development process for smooth execution.</p>
+      <a href="member-portfolio3.html" class="view-portfolio-btn">View Full Portfolio</a>
+      <br>
+      <a href="index.html" class="back-link">Back to Members</a>
+    </div>
+
+    <!-- Profile 5 -->
+    <div class="profile-container">
+      <img src="images/profile5.jpg" alt="Member Photo" class="profile-pic">
+      <h1>Cedrick S. Alejo</h1>
+      <p>Member</p>
+      <div class="divider"></div>
+      <p class="short-bio">Cedrick provides strategic input and helps the team meet deadlines efficiently.</p>
+      <a href="member-portfolio4.html" class="view-portfolio-btn">View Full Portfolio</a>
+      <br>
+      <a href="index.html" class="back-link">Back to Members</a>
+    </div>
+
+    <!-- Profile 6 -->
+    <div class="profile-container">
+      <img src="images/profile6.jpg" alt="Member Photo" class="profile-pic">
+      <h1>Shiela Mae S. Calonge</h1>
+      <p>Member</p>
+      <div class="divider"></div>
+      <p class="short-bio">Shiela ensures quality control and supports the team with organization and research.</p>
+      <a href="member-portfolio5.html" class="view-portfolio-btn">View Full Portfolio</a>
+      <br>
+      <a href="index.html" class="back-link">Back to Members</a>
+    </div>
+</div>
+
+<script>
+// --- Persistent Dark/Light mode ---
+const toggleBtn = document.getElementById('theme-toggle');
+const icon = document.getElementById('theme-icon');
+
+if(localStorage.getItem("theme") === "dark") {
+  document.body.classList.add("dark-mode");
+  icon.textContent = "☀️";
+} else {
+  document.body.classList.remove("dark-mode");
+  icon.textContent = "🌙";
+}
+
+toggleBtn.addEventListener("click", () => {
+  document.body.classList.toggle("dark-mode");
+  const isDark = document.body.classList.contains("dark-mode");
+  icon.textContent = isDark ? "☀️" : "🌙";
+  localStorage.setItem("theme", isDark ? "dark" : "light");
+});
+</script>
+</body>
+</html>

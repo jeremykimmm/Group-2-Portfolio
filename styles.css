@@ -1,0 +1,394 @@
+/* --------------------------------------------------
+   RESET & GLOBAL STYLES
+-------------------------------------------------- */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background: linear-gradient(135deg, #f6d365, #fda085, #fbc2eb);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+  color: #222;
+}
+
+/* Universal smooth transition */
+button, 
+.portfolio-card, 
+.project,
+ul.members li,
+.group-photo,
+.profile-link {
+  transition: 0.3s ease;
+}
+
+/* --------------------------------------------------
+   PORTFOLIO CARD (INDEX PAGE)
+-------------------------------------------------- */
+.portfolio-card {
+  width: 100%;
+  max-width: 980px;
+  background: rgba(255, 255, 255, 0.96);
+  border-radius: 14px;
+  padding: 28px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.portfolio-card:hover {
+  transform: translateY(-5px) scale(1.01);
+}
+
+/* Headings */
+h1 {
+  font-size: 2rem;
+  color: #2b2b57;
+  margin-bottom: 10px;
+}
+
+.subheading {
+  color: #6b2b7a;
+  margin-bottom: 12px;
+  font-size: 1.3rem;
+}
+
+.intro {
+  color: #3b3b5a;
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+
+/* --------------------------------------------------
+   GRID LAYOUT
+-------------------------------------------------- */
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 20px;
+  align-items: start;
+}
+
+@media (max-width: 760px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* --------------------------------------------------
+   MEMBERS LIST
+-------------------------------------------------- */
+ul.members {
+  list-style: none;
+}
+
+ul.members li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 14px;
+  margin-bottom: 10px;
+  border-radius: 10px;
+  background: rgba(107,43,122,0.08);
+  border: 1px solid rgba(107,43,122,0.1);
+  transition: 0.2s ease;
+}
+
+.member-name {
+  font-weight: 700;
+  font-size: 1rem;
+  color: #2b2b57;
+}
+
+.member-role {
+  font-size: 0.9rem;
+  color: #6b6a89;
+  opacity: 0.85;
+}
+
+ul.members li:hover {
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+}
+
+/* --------------------------------------------------
+   GROUP PHOTO
+-------------------------------------------------- */
+.group-photo {
+  width: 100%;
+  max-width: 500px;  /* adjust as needed */
+  border-radius: 14px;
+  border: 5px solid white;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+
+.group-photo:hover {
+  transform: scale(1.05);
+}
+
+.photo-caption {
+  margin-top: 8px;
+  color: #555;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+/* --------------------------------------------------
+   BUTTONS & LINKS
+-------------------------------------------------- */
+.profile-link {
+  display: inline-block;
+  background: linear-gradient(90deg, #6b2b7a, #2b2b57);
+  color: #fff;
+  padding: 10px 14px;
+  border-radius: 10px;
+  text-decoration: none;
+  margin-top: 12px;
+  font-weight: bold;
+}
+
+.profile-link:hover {
+  opacity: 0.95;
+  transform: translateY(-3px);
+}
+
+/* --------------------------------------------------
+   PROFILE PAGE ELEMENTS
+-------------------------------------------------- */
+.profile-pic:hover {
+  transform: scale(1.1) rotate(-2deg);
+  box-shadow: 0 12px 25px rgba(0,0,0,0.3);
+}
+
+/* --------------------------------------------------
+   TABS
+-------------------------------------------------- */
+.tab-button {
+  padding: 10px 20px;
+  cursor: pointer;
+  background: #eee;
+  border: none;
+  border-radius: 8px;
+  margin-right: 8px;
+}
+
+.tab-button:hover { background: #ddd; }
+.tab-button.active { 
+  background: linear-gradient(90deg,#6b2b7a,#2b2b57); 
+  color:white; 
+}
+
+.tab-content { margin-top: 20px; }
+
+/* --------------------------------------------------
+   SCROLL TO TOP BUTTON
+-------------------------------------------------- */
+#scrollTopBtn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  display: none;
+  background: #6b2b7a;
+  color: white;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 18px;
+}
+
+#scrollTopBtn:hover {
+  background: #2b2b57;
+}
+
+/* --------------------------------------------------
+   MODALS
+-------------------------------------------------- */
+.modal { 
+  display:none; 
+  position:fixed; 
+  top:0; 
+  left:0; 
+  width:100%; 
+  height:100%; 
+  background:rgba(0,0,0,0.5); 
+  justify-content:center; 
+  align-items:center; 
+}
+
+.modal-content { 
+  background:white; 
+  padding:20px; 
+  border-radius:12px; 
+  max-width:500px; 
+  margin:auto; 
+}
+
+.close { 
+  float:right; 
+  cursor:pointer; 
+  font-size:22px; 
+  font-weight:bold; 
+}
+
+/* --------------------------------------------------
+   PROJECT CARDS
+-------------------------------------------------- */
+.project { 
+  cursor:pointer; 
+  margin-bottom:12px; 
+  padding:10px; 
+  border:1px solid #ccc; 
+  border-radius:8px; 
+}
+
+.project:hover { 
+  background:#f2f2f2; 
+  transform: translateY(-3px) scale(1.02);
+}
+
+.member-name {
+  font-weight: bold;
+  color: #2b2b57;
+}
+
+.member-role {
+  margin-left: auto; /* pushes role slightly right without huge gap */
+  color: #6b6a89;
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
+
+.about-container {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;  /* left column wider */
+  gap: 30px;                        /* reduces spacing */
+  align-items: center;
+}
+
+ul.members li {
+  display: flex;
+  align-items: center;
+  gap: 10px;             /* closer spacing */
+  padding: 12px 14px;
+}
+
+.member-name {
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.member-role {
+  margin-left: auto;
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
+@media (max-width: 760px) {
+  .group-photo {
+    max-width: 100%;
+    height: auto;
+  }
+}
+
+.profile-link {
+  margin-top: 16px; /* slightly bigger */
+}
+
+.photo-caption:hover {
+  color: #2b2b57;
+}
+
+/* Feedback bubble button */
+.feedback-bubble {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: linear-gradient(90deg, #6b2b7a, #2b2b57);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  font-size: 28px;
+  cursor: pointer;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  z-index: 1000;
+  transition: transform 0.2s ease;
+}
+
+.feedback-bubble:hover {
+  transform: scale(1.1);
+}
+
+/* Modal styles */
+.modal {
+  display: none; 
+  position: fixed; 
+  top: 0;
+  left: 0;
+  width: 100%; 
+  height: 100%;
+  background: rgba(0,0,0,0.5); 
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+}
+
+.modal-content {
+  background: white;
+  padding: 24px;
+  border-radius: 12px;
+  max-width: 500px;
+  width: 90%;
+  position: relative;
+}
+
+.modal-content h3 {
+  margin-bottom: 12px;
+  color: #6b2b7a;
+}
+
+.modal-content label {
+  display: block;
+  margin-top: 10px;
+  margin-bottom: 4px;
+  font-weight: bold;
+}
+
+.modal-content textarea, .modal-content select {
+  width: 100%;
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  margin-bottom: 10px;
+}
+
+.modal-content button {
+  padding: 10px 14px;
+  border-radius: 8px;
+  background: linear-gradient(90deg, #6b2b7a, #2b2b57);
+  color: white;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+}
+
+.modal-content button:hover {
+  opacity: 0.95;
+}
+
+/* Close button */
+.modal .close {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  font-size: 22px;
+  cursor: pointer;
+  color: #6b2b7a;
+}

@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Group Favorites</title>
+<style>
+/* --- Root body styles --- */
+body {
+  color: #000;
+  background: radial-gradient(circle at 20% 30%, #800000, transparent 40%),
+              radial-gradient(circle at 70% 60%, #b22222, transparent 50%),
+              radial-gradient(circle at 50% 80%, #ff3333, transparent 50%),
+              radial-gradient(circle at 30% 70%, #d3d3d3, transparent 60%),
+              radial-gradient(circle at 80% 20%, #ffffff, transparent 40%);
+  background-size: 200% 200%;
+  animation: gradientMove 15s ease infinite;
+}
+
+.favorites-container {
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 30px;
+  border-radius: 20px;
+  background: radial-gradient(circle at 30% 30%, #ffffff, transparent 60%),
+              radial-gradient(circle at 70% 70%, #d3d3d3, transparent 60%),
+              radial-gradient(circle at 50% 50%, #ff3333, transparent 50%),
+              radial-gradient(circle at 60% 20%, #b22222, transparent 50%),
+              radial-gradient(circle at 20% 80%, #800000, transparent 50%);
+  background-size: 200% 200%;
+  animation: gradientMove 15s ease infinite;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+  transition: filter 0.3s ease;
+}
+
+body.dark-mode {
+  color: #fff;
+  background: radial-gradient(circle at 20% 30%, #000000, transparent 40%),
+              radial-gradient(circle at 70% 60%, #555555, transparent 50%),
+              radial-gradient(circle at 50% 80%, #1a1a4d, transparent 50%),
+              radial-gradient(circle at 30% 70%, #330033, transparent 60%),
+              radial-gradient(circle at 80% 20%, #ff3399, transparent 40%);
+  background-size: 200% 200%;
+  animation: gradientMove 20s ease infinite;
+}
+
+body.dark-mode .favorites-container {
+  background: radial-gradient(circle at 30% 30%, #555555, transparent 60%),
+              radial-gradient(circle at 70% 70%, #000000, transparent 60%),
+              radial-gradient(circle at 50% 50%, #1a1a4d, transparent 50%),
+              radial-gradient(circle at 60% 20%, #330033, transparent 50%),
+              radial-gradient(circle at 20% 80%, #ff3399, transparent 50%);
+  background-size: 200% 200%;
+  animation: gradientMove 20s ease infinite;
+}
+
+@keyframes gradientMove {
+  0% { background-position: 0% 0%, 50% 50%, 100% 0%, 0% 100%, 100% 100%; }
+  50% { background-position: 100% 100%, 0% 0%, 50% 100%, 100% 0%, 0% 50%; }
+  100% { background-position: 0% 0%, 50% 50%, 100% 0%, 0% 100%, 100% 100%; }
+}
+
+.favorites-container h1 {
+  text-align: center;
+  margin-bottom: 40px;
+  font-size: 2.5rem;
+  color: #fff;
+  text-shadow: 2px 2px 8px rgba(0,0,0,0.6);
+}
+
+.songs-row {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 40px;
+  overflow-x: auto;
+  padding-bottom: 10px;
+}
+.songs-row::-webkit-scrollbar { display: none; }
+
+.song-card {
+  width: 250px;
+  border-radius: 16px;
+  overflow: hidden;
+  background: rgba(0,0,0,0.5);
+  text-align: center;
+  padding-bottom: 15px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+}
+
+.song-card img { width: 100%; display: block; }
+.song-card audio { width: 90%; margin: 10px auto; display: block; }
+
+.lyrics-btn, .movie-btn {
+  background: rgba(255,255,255,0.2);
+  color: #fff;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 10px;
+  margin-top: 8px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.lyrics-btn:hover, .movie-btn:hover { background: rgba(255,255,255,0.4); }
+
+.movie-card {
+  width: 80%;
+  max-width: 700px;
+  margin: 0 auto;
+  border-radius: 16px;
+  background: rgba(0,0,0,0.5);
+  padding: 15px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+}
+.movie-card img { width: 100%; border-radius: 12px; margin-bottom: 10px; }
+.movie-card video { width: 100%; border-radius: 10px; }
+
+#theme-toggle {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+  border-radius: 50%;
+  cursor: pointer;
+  backdrop-filter: blur(5px);
+  padding: 10px 14px;
+  font-size: 18px;
+  background: rgba(255,255,255,0.85);
+  color: #000;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  transition: 0.3s;
+}
+#theme-toggle:hover { background: rgba(255,255,255,1); transform: translateY(-2px); }
+body.dark-mode #theme-toggle { background: rgba(0,0,0,0.6); color: #fff; }
+body.dark-mode #theme-toggle:hover { background: rgba(0,0,0,0.8); }
+
+.back-portfolio-btn-container { text-align: center; margin-bottom: 30px; }
+.back-portfolio-btn {
+  background: linear-gradient(90deg, #800000, #b22222);
+  color: #fff;
+  padding: 12px 20px;
+  border-radius: 12px;
+  font-weight: bold;
+  text-decoration: none;
+  transition: 0.3s ease;
+}
+.back-portfolio-btn:hover { opacity: 0.9; }
+body.dark-mode .back-portfolio-btn { background: #000; color: #fff; }
+
+.song-title { font-size: 16px; font-weight: bold; margin-top: 10px; color: #fff; text-shadow: 1px 1px 4px rgba(0,0,0,0.6); }
+
+/* --- Centered floating panel with blur --- */
+.lyrics-panel {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.95);
+  width: 80%;
+  max-width: 600px;
+  max-height: 80vh;
+  background: rgba(255, 255, 255, 0.7);
+  color: #000;
+  padding: 25px;
+  border-radius: 20px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+  z-index: 99999;
+  overflow-y: auto;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease, transform 0.3s ease, backdrop-filter 0.3s ease;
+  backdrop-filter: blur(0px);
+}
+.lyrics-panel.dark-mode { background: rgba(0,0,0,0.65); color: #fff; }
+.lyrics-panel.active {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate(-50%, -50%) scale(1);
+  backdrop-filter: blur(8px);
+}
+
+.close-lyrics {
+  background: none;
+  border: none;
+  font-size: 24px;
+  font-weight: bold;
+  float: right;
+  cursor: pointer;
+  color: inherit;
+}
+
+.favorites-container.blur { filter: blur(5px); transition: filter 0.3s ease; }
+</style>
+</head>
+<body>
+
+<button id="theme-toggle" title="Toggle Dark/Light Mode">🌙</button>
+
+<div class="back-portfolio-btn-container">
+  <a href="member-portfolio.html" class="back-portfolio-btn">Back to My Portfolio</a>
+</div>
+
+<div class="favorites-container" id="mainContent">
+  <h1>Our Favorite Songs & Movie Trailer</h1>
+
+  <div class="songs-row">
+
+<div class="song-card">
+  <img src="songs/kim1.jpg" alt="Song 1 Cover">
+  <h3 class="song-title">Lilith by Saint Avangeline</h3>
+  <audio controls>
+    <source src="songs/song1.mp3" type="audio/mpeg">
+  </audio>
+
+  <div class="lyrics-content" style="display:none;">
+    
+    <p>Verse 1</p>
+    <p>Her skin glowed green and blue<br>
+    The starry sky dimmed by fiery hues<br>
+    My white dress blew in midnight's view<br>
+    Of the world reborn, begun anew<br>
+    Two thousand years and twenty more<br>
+    And she looked beautiful as ever before<br>
+    As she pushed me down into the warm<br>
+    Water deep below, my clothes were torn</p>
+    
+    <p>Chorus</p>
+    <p>Lilith, you siren<br>
+    How could you do this to me?<br>
+    Lilith, I'm dyin'<br>
+    Why won't you set me free?</p>
+    
+    <p>Post-Chorus 1</p>
+    <p>I tried to scream, but lilies clouded my mind<br>
+    The petals softly floating into my eyes<br>
+    I felt your fingers slowly crawl up my spine<br>
+    We didn't have to sink for you to be mine</p>
+    
+    <p>Verse 2</p>
+    <p>Her eyes were red as dawn<br>
+    As she held me down under the pond<br>
+    Fireworks filled the sky beyond<br>
+    I heard the cheers from above the lawn<br>
+    Cold hands brushed through my thighs<br>
+    You were evil, everyone had realized<br>
+    Thought I was different, thought I'd save your soul<br>
+    Guess you can't save what isn't half of a whole</p>
+    
+    <p>Chorus</p>
+    <p>Lilith, you siren<br>
+    How could you do this to me?<br>
+    Lilith, I'm dyin'<br>
+    Why won't you set me free?</p>
+  
+    <p>Post-Chorus 2</p>
+    <p>I tried to scream, but lilies clouded my mind<br>
+    The petals softly floating into my eyes<br>
+    I felt your hands as they wrapped around my neck<br>
+    When did our love become this shallow shipwreck?</p>
+    
+    <p>Bridge</p>
+    <p>Two thousand years and twenty more<br>
+    And I thought I was weaker than I had ever been before<br>
+    But the moonlight's rays hit the water below<br>
+    And it was now or never to swim to the Garden, and, oh<br>
+    Did she push and pull, tryin' to get me to drown?<br>
+    But the lilies in my mind began to run around<br>
+    As I gripped and dragged myself along the dirt<br>
+    I turned back to face the girl I loved for all of my hurt<br>
+    Said, “My dear, this is it, I have got to go”<br>
+    And she faded in the deep and murky water below</p>
+    
+    <p>Chorus</p>
+    <p>Lilith, you siren<br>
+    How could you do this to me?<br>
+    Lilith, I'm cryin'<br>
+    My pain will stay with me<br>
+    Lilith, you siren (I tried to scream, but lilies clouded my mind)<br>
+    You were so cruel and so mean (The petals softly floating into my eyes)<br>
+    Lilith, I'm tryin' (I felt your hands as they wrapped around my neck)<br>
+    To love life now that I'm free (We didn't have to sink for you to be mine)</p>
+  </div>
+
+  <button class="lyrics-btn" onclick="showLyricsFromDiv(this)">Show Lyrics</button>
+</div>
+
+    <!-- SONG 2 -->
+    <div class="song-card">
+      <img src="songs/kim2.jpeg" alt="Song 2 Cover">
+      <h3 class="song-title">I Wish You Love by Laufey</h3>
+      <audio controls>
+        <source src="songs/song2.mp3" type="audio/mpeg">
+      </audio>
+
+<div class="lyrics-content" style="display:none;">
+    
+    <p>I wish you bluebirds in the spring<br>
+    To give your heart a song to sing<br>
+    And then a kiss, but more than this<br>
+    I wish you love</p>
+    
+    <p>And in July a lemonade<br>
+    To cool you in some leafy glade<br>
+    I wish you health, and more than wealth<br>
+    I wish you love</p>
+    
+    <p>My breaking heart and I agree<br>
+    That you and I could never be<br>
+    So, with my best, my very best<br>
+    I set you free</p>
+    
+    <p>I wish you shelter from the storm<br>
+    A cozy fire to keep you warm<br>
+    But most of all, when snowflakes fall<br>
+    I wish you love</p>
+    
+    <p>Outro</p>
+    <p>I wish you love</p>
+
+    <p>Bridge/Recap</p>
+    <p>My breaking heart and I agree<br>
+    That you and I could never be<br>
+    So, with my best, my very best<br>
+    I set you free</p>
+
+    <p>Outro</p>
+    <p>I wish you shelter from the storm<br>
+    A cozy fire to keep you warm<br>
+    But most of all, when snowflakes fall<br>
+    But most of all, when snowflakes fall<br>
+    I wish you love, love, love</p>
+  </div>
+
+      <button class="lyrics-btn" onclick="showLyricsFromDiv(this)">Show Lyrics</button>
+    </div>
+
+    <!-- SONG 3 -->
+    <div class="song-card">
+      <img src="songs/kim3.png" alt="Song 3 Cover">
+      <h3 class="song-title">Crybaby by SZA</h3>
+      <audio controls>
+        <source src="songs/song3.mp3" type="audio/mpeg">
+      </audio>
+
+<div class="lyrics-content" style="display:none;">
+
+  <p><strong>Verse 1</strong><br>
+  Maybe<br>
+  If that attitude took a backseat, Miss Know-It-All<br>
+  You'd find a man (Find a man)<br>
+  You got no chill, you can't (Ain't got no chill)<br>
+  Damn, baby, and maybe<br>
+  If I stopped blaming the world for my faults<br>
+  I could evolve<br>
+  Maybe the pressure just made me too soft</p>
+
+  <p><strong>Pre-Chorus</strong><br>
+  'Cause all I seem to do is get in my way<br>
+  Then blame you, it's just a cycle, rinse, recycle<br>
+  You're so sick, I'm so sick of me too</p>
+
+  <p><strong>Chorus</strong><br>
+  Call me Miss Crybaby<br>
+  Call me Miss Crybaby<br>
+  It's not my fault (It's not my fault)<br>
+  If it's Murphy's law (If it's Murphy's law)<br>
+  What can go wrong will go wrong<br>
+  Telling you, crybaby<br>
+  Call me a crybaby<br>
+  It's not my fault (It's not my fault)<br>
+  It's Murphy's law (It's Murphy's law)<br>
+  What can go wrong will go wrong</p>
+
+  <p><strong>Post-Chorus</strong><br>
+  Don't I know<br>
+  Don't I know<br>
+  Damn it, don't I know<br>
+  Oh, you know it</p>
+
+  <p><strong>Verse 2</strong><br>
+  And maybe (Maybe)<br>
+  You should really stop smokin' them Backwoods so you can age backwards, please, girl<br>
+  Baby, it's your world, oh<br>
+  Maybe (Maybe)<br>
+  You should stop focusing all of that negative blocking the positive<br>
+  Trying to find, you're my blindspot, it's fine niggas<br>
+  Ruin me every single time</p>
+
+  <p><strong>Pre-Chorus</strong><br>
+  'Cause all I seem to do is get in my way<br>
+  Then blame you, it's just a cycle, I'm so psycho<br>
+  You so sick, I'm so sick of me too</p>
+
+  <p><strong>Chorus</strong><br>
+  Call me Miss Crybaby<br>
+  Call me Miss Crybaby<br>
+  It's not my fault (It's not my fault)<br>
+  Damn that Murphy's law (It's Murphy's law)<br>
+  What can go wrong goin' wrong<br>
+  Baby, it's crybaby<br>
+  Oh, it's crybaby<br>
+  It's not my fault (It's not my fault)<br>
+  Fuck Murphy's law (It's Murphy's law)<br>
+  It ain't gone 'til it's gone, oh</p>
+
+  <p><strong>Outro</strong><br>
+  (Can't stop the raining)<br>
+  (And I'm still sick of maybe)<br>
+  (Give it all to live that life)<br>
+  I know you told stories about me<br>
+  Most of them awful, all of them true<br>
+  Here's some for you, yeah, ooh<br>
+  I know you told stories about me<br>
+  Most of them awful, all of them true<br>
+  Here's some for you, yeah (Oh, ooh)</p>
+</div>
+
+
+      <button class="lyrics-btn" onclick="showLyricsFromDiv(this)">Show Lyrics</button>
+    </div>
+
+  </div>
+
+  <!-- MOVIE -->
+  <div class="movie-card">
+    <img src="movies/kim.jpg" alt="Movie Poster">
+    <video id="movieTrailer" controls>
+      <source src="movies/kim.mp4" type="video/mp4">
+    </video>
+
+    <div class="lyrics-content" style="display:none;">
+<p>Title: The School for Good and Evil</p>
+    
+    <p>Year: 2022<br>
+    Genre: American fantasy film</p>
+    
+    <p>Director: Paul Feig<br>
+    Screenplay: Paul Feig and David Magee, based on the 2013 novel by Soman Chainani.</p>
+    
+    <p>Starring: Sophia Anne Caruso (as Sophie) and Sofia Wylie (as Agatha), leading an ensemble cast.</p>
+    
+    <p>Synopsis: Two best friends, Sophie and Agatha, are sent to the Schools for Good and Evil. When their fortunes are seemingly reversed, their friendship is put to the test.</p>
+    
+    <p>Development & Production: The film's development started in 2013 with Universal Pictures, but it languished in development hell. Netflix took over in 2017, and Feig was hired in 2020. Principal photography took place in Northern Ireland between January and July 2021.</p>
+    
+    <p>Release & Reception: Released on Netflix on October 19, 2022. The film received generally negative reviews from critics, who criticized the narrative and storytelling, but it received praise for its cast and visuals.</p>
+  </div>
+
+    <button class="movie-btn" onclick="showLyricsFromDiv(this)">More Info</button>
+  </div>
+</div>
+
+<!-- FLOATING PANEL -->
+<div id="lyricsPanel" class="lyrics-panel">
+  <button class="close-lyrics" onclick="closeLyrics()">✕</button>
+  <h2 id="lyricsTitle"></h2>
+  <div id="lyricsText"></div>
+</div>
+
+<script>
+const toggleBtn = document.getElementById('theme-toggle');
+const mainContent = document.getElementById("mainContent");
+const lyricsPanel = document.getElementById("lyricsPanel");
+
+/* Load theme */
+if(localStorage.getItem("theme") === "dark") {
+  document.body.classList.add("dark-mode");
+  toggleBtn.textContent = "☀️";
+}
+
+toggleBtn.addEventListener("click", () => {
+  document.body.classList.toggle("dark-mode");
+  const isDark = document.body.classList.contains("dark-mode");
+  toggleBtn.textContent = isDark ? "☀️" : "🌙";
+  localStorage.setItem("theme", isDark ? "dark" : "light");
+  updateLyricsPanelTheme();
+});
+
+function updateLyricsPanelTheme() {
+  if(document.body.classList.contains("dark-mode")) {
+    lyricsPanel.classList.add("dark-mode");
+  } else {
+    lyricsPanel.classList.remove("dark-mode");
+  }
+}
+
+function showLyricsFromDiv(button){
+  const contentDiv = button.previousElementSibling;
+  const title = button.classList.contains("lyrics-btn") 
+                ? button.parentElement.querySelector(".song-title").textContent 
+                : "Movie Info";
+  document.getElementById("lyricsTitle").textContent = title;
+  document.getElementById("lyricsText").innerHTML = contentDiv.innerHTML;
+
+  lyricsPanel.classList.add("active");
+  mainContent.classList.add("blur");
+  updateLyricsPanelTheme();
+}
+
+function closeLyrics(){
+  lyricsPanel.classList.remove("active");
+  mainContent.classList.remove("blur");
+}
+
+// Select all audio players
+const allAudios = document.querySelectorAll("audio");
+
+// Select your movie trailer video  (CHANGE the ID if yours is different)
+const movieVideo = document.getElementById("movieTrailer");
+
+// --- Pause all other audio when one plays ---
+allAudios.forEach(audio => {
+  audio.addEventListener("play", () => {
+
+    // Pause all other audio
+    allAudios.forEach(other => {
+      if (other !== audio) {
+        other.pause();
+      }
+    });
+
+    // Pause video trailer when a song plays
+    if (movieVideo) {
+      movieVideo.pause();
+    }
+  });
+});
+
+
+// --- Pause ALL audio when the movie trailer plays ---
+if (movieVideo) {
+  movieVideo.addEventListener("play", () => {
+
+    allAudios.forEach(a => a.pause());
+  });
+}
+</script>
+
+</body>
+</html>

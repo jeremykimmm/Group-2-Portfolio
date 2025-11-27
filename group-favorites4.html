@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Group Favorites</title>
+<style>
+/* --- Root body styles --- */
+body {
+  color: #000;
+  background: radial-gradient(circle at 20% 30%, #800000, transparent 40%),
+              radial-gradient(circle at 70% 60%, #b22222, transparent 50%),
+              radial-gradient(circle at 50% 80%, #ff3333, transparent 50%),
+              radial-gradient(circle at 30% 70%, #d3d3d3, transparent 60%),
+              radial-gradient(circle at 80% 20%, #ffffff, transparent 40%);
+  background-size: 200% 200%;
+  animation: gradientMove 15s ease infinite;
+}
+
+.favorites-container {
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 30px;
+  border-radius: 20px;
+  background: radial-gradient(circle at 30% 30%, #ffffff, transparent 60%),
+              radial-gradient(circle at 70% 70%, #d3d3d3, transparent 60%),
+              radial-gradient(circle at 50% 50%, #ff3333, transparent 50%),
+              radial-gradient(circle at 60% 20%, #b22222, transparent 50%),
+              radial-gradient(circle at 20% 80%, #800000, transparent 50%);
+  background-size: 200% 200%;
+  animation: gradientMove 15s ease infinite;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+  transition: filter 0.3s ease;
+}
+
+body.dark-mode {
+  color: #fff;
+  background: radial-gradient(circle at 20% 30%, #000000, transparent 40%),
+              radial-gradient(circle at 70% 60%, #555555, transparent 50%),
+              radial-gradient(circle at 50% 80%, #1a1a4d, transparent 50%),
+              radial-gradient(circle at 30% 70%, #330033, transparent 60%),
+              radial-gradient(circle at 80% 20%, #ff3399, transparent 40%);
+  background-size: 200% 200%;
+  animation: gradientMove 20s ease infinite;
+}
+
+body.dark-mode .favorites-container {
+  background: radial-gradient(circle at 30% 30%, #555555, transparent 60%),
+              radial-gradient(circle at 70% 70%, #000000, transparent 60%),
+              radial-gradient(circle at 50% 50%, #1a1a4d, transparent 50%),
+              radial-gradient(circle at 60% 20%, #330033, transparent 50%),
+              radial-gradient(circle at 20% 80%, #ff3399, transparent 50%);
+  background-size: 200% 200%;
+  animation: gradientMove 20s ease infinite;
+}
+
+@keyframes gradientMove {
+  0% { background-position: 0% 0%, 50% 50%, 100% 0%, 0% 100%, 100% 100%; }
+  50% { background-position: 100% 100%, 0% 0%, 50% 100%, 100% 0%, 0% 50%; }
+  100% { background-position: 0% 0%, 50% 50%, 100% 0%, 0% 100%, 100% 100%; }
+}
+
+.favorites-container h1 {
+  text-align: center;
+  margin-bottom: 40px;
+  font-size: 2.5rem;
+  color: #fff;
+  text-shadow: 2px 2px 8px rgba(0,0,0,0.6);
+}
+
+.songs-row {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 40px;
+  overflow-x: auto;
+  padding-bottom: 10px;
+}
+.songs-row::-webkit-scrollbar { display: none; }
+
+.song-card {
+  width: 250px;
+  border-radius: 16px;
+  overflow: hidden;
+  background: rgba(0,0,0,0.5);
+  text-align: center;
+  padding-bottom: 15px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+}
+
+.song-card img { width: 100%; display: block; }
+.song-card audio { width: 90%; margin: 10px auto; display: block; }
+
+.lyrics-btn, .movie-btn {
+  background: rgba(255,255,255,0.2);
+  color: #fff;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 10px;
+  margin-top: 8px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.lyrics-btn:hover, .movie-btn:hover { background: rgba(255,255,255,0.4); }
+
+.movie-card {
+  width: 80%;
+  max-width: 700px;
+  margin: 0 auto;
+  border-radius: 16px;
+  background: rgba(0,0,0,0.5);
+  padding: 15px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+}
+.movie-card img { width: 100%; border-radius: 12px; margin-bottom: 10px; }
+.movie-card video { width: 100%; border-radius: 10px; }
+
+#theme-toggle {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+  border-radius: 50%;
+  cursor: pointer;
+  backdrop-filter: blur(5px);
+  padding: 10px 14px;
+  font-size: 18px;
+  background: rgba(255,255,255,0.85);
+  color: #000;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  transition: 0.3s;
+}
+#theme-toggle:hover { background: rgba(255,255,255,1); transform: translateY(-2px); }
+body.dark-mode #theme-toggle { background: rgba(0,0,0,0.6); color: #fff; }
+body.dark-mode #theme-toggle:hover { background: rgba(0,0,0,0.8); }
+
+.back-portfolio-btn-container { text-align: center; margin-bottom: 30px; }
+.back-portfolio-btn {
+  background: linear-gradient(90deg, #800000, #b22222);
+  color: #fff;
+  padding: 12px 20px;
+  border-radius: 12px;
+  font-weight: bold;
+  text-decoration: none;
+  transition: 0.3s ease;
+}
+.back-portfolio-btn:hover { opacity: 0.9; }
+body.dark-mode .back-portfolio-btn { background: #000; color: #fff; }
+
+.song-title { font-size: 16px; font-weight: bold; margin-top: 10px; color: #fff; text-shadow: 1px 1px 4px rgba(0,0,0,0.6); }
+
+/* --- Centered floating panel with blur --- */
+.lyrics-panel {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.95);
+  width: 80%;
+  max-width: 600px;
+  max-height: 80vh;
+  background: rgba(255, 255, 255, 0.7);
+  color: #000;
+  padding: 25px;
+  border-radius: 20px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+  z-index: 99999;
+  overflow-y: auto;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease, transform 0.3s ease, backdrop-filter 0.3s ease;
+  backdrop-filter: blur(0px);
+}
+.lyrics-panel.dark-mode { background: rgba(0,0,0,0.65); color: #fff; }
+.lyrics-panel.active {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate(-50%, -50%) scale(1);
+  backdrop-filter: blur(8px);
+}
+
+.close-lyrics {
+  background: none;
+  border: none;
+  font-size: 24px;
+  font-weight: bold;
+  float: right;
+  cursor: pointer;
+  color: inherit;
+}
+
+.favorites-container.blur { filter: blur(5px); transition: filter 0.3s ease; }
+</style>
+</head>
+<body>
+
+<button id="theme-toggle" title="Toggle Dark/Light Mode">🌙</button>
+
+<div class="back-portfolio-btn-container">
+  <a href="member-portfolio4.html" class="back-portfolio-btn">Back to My Portfolio</a>
+</div>
+
+<div class="favorites-container" id="mainContent">
+  <h1>Our Favorite Songs & Movie Trailer</h1>
+
+  <div class="songs-row">
+
+<div class="song-card">
+  <img src="songs/ced1.jpg" alt="Song 1 Cover">
+  <h3 class="song-title">Best Part (feat H.E.R.) by Daniel Caesar</h3>
+  <audio controls>
+    <source src="songs/song13.mp3" type="audio/mpeg">
+  </audio>
+
+  <div class="lyrics-content" style="display:none;">
+<p>Oh, ay</p>
+    
+    <p>You don't know, babe<br>
+    When you hold me<br>
+    And kiss me slowly<br>
+    It's the sweetest thing<br>
+    And it don't change<br>
+    If I had it my way<br>
+    You would know that you are</p>
+    
+    <p>You're the coffee that I need in the morning<br>
+    You're my sunshine in the rain when it's pouring<br>
+    Won't you give yourself to me?<br>
+    Give it all, oh</p>
+    
+    <p>I just wanna see<br>
+    I just wanna see how beautiful you are<br>
+    You know that I see it, I know you're a star<br>
+    Where you go, I'll follow, no matter how far<br>
+    If life is a movie, then you're the best part, oh<br>
+    You're the best part, ooh<br>
+    Oh-oh-oh-oh<br>
+    Best part</p>
+    
+    <p>It's this sunrise<br>
+    And those brown eyes, yes<br>
+    You're the one that I desire<br>
+    When we wake up<br>
+    And then we make love (make love)<br>
+    It makes me feel so nice</p>
+    
+    <p>You're my water when I'm stuck in the desert<br>
+    You're the Tylenol I take when my head hurts<br>
+    You're the sunshine on my life</p>
+    
+    <p>I just wanna see how beautiful you are<br>
+    You know that I see it, I know you're a star<br>
+    Where you go, I'll follow, no matter how far<br>
+    If life is a movie, then you're the best part<br>
+    Oh-oh-oh-oh<br>
+    You're the best part<br>
+    Oh-oh-oh-oh<br>
+    Best part (you're the best part)</p>
+    
+    <p>If you love me, won't you say something?<br>
+    If you love me, won't you, won't you?<br>
+    If you love me, won't you say something? (Say something)<br>
+    If you love me, won't you?<br>
+    Love me, won't you?<br>
+    If you love me, won't you say something? (Say something)<br>
+    If you love me, won't you? Ah<br>
+    If you love me, won't you say something? (Say something)<br>
+    If you love me, won't you?<br>
+    Love me, won't you?<br>
+    If you love me, won't you say something? (Say something)<br>
+    If you love me, won't you? Ah<br>
+    If you love me, won't you say something? (Say something)<br>
+    If you love me, won't you?<br>
+    Love me, won't you?</p>
+  </div>
+
+  <button class="lyrics-btn" onclick="showLyricsFromDiv(this)">Show Lyrics</button>
+</div>
+
+    <!-- SONG 2 -->
+    <div class="song-card">
+      <img src="songs/ced2.jpg" alt="Song 2 Cover">
+      <h3 class="song-title">Sanctuary by Joji</h3>
+      <audio controls>
+        <source src="songs/song14.mp3" type="audio/mpeg">
+      </audio>
+
+<div class="lyrics-content" style="display:none;">
+<p>Go ahead and bark after dark<br>
+    Fallen star, I'm your one call away<br>
+    Motel halls, neon walls<br>
+    When night falls, I am your escape</p>
+    
+    <p>When you lay alone, I ache<br>
+    Something I wanted to feel</p>
+    
+    <p>If you've been waiting for fallin' in love<br>
+    Babe, you don't have to wait on me<br>
+    'Cause I've been aiming for heaven above<br>
+    But an angel ain't what I need</p>
+    
+    <p>Not anyone, you're the one<br>
+    More than fun, you're the sanctuary<br>
+    'Cause what you want is what I want<br>
+    Sincerity</p>
+    
+    <p>Souls that dream alone lie awake<br>
+    I'll give you something so real</p>
+    
+    <p>If you've been waiting for fallin' in love<br>
+    Babe, you don't have to wait on me<br>
+    'Cause I've been aiming for heaven above<br>
+    But an angel ain't what I need</p>
+    
+    <p>Pull me, oh, so close<br>
+    'Cause you never know<br>
+    Just how long our lives will be</p>
+    
+    <p>If you've been waiting for fallin' in love<br>
+    Babe, you don't have to wait on me<br>
+    'Cause I've been aiming for heaven above<br>
+    But an angel ain't what I need</p>
+  </div>
+
+      <button class="lyrics-btn" onclick="showLyricsFromDiv(this)">Show Lyrics</button>
+    </div>
+
+    <!-- SONG 3 -->
+    <div class="song-card">
+      <img src="songs/ced3.jpeg" alt="Song 3 Cover">
+      <h3 class="song-title">Leonora by Sugarcane
+</h3>
+      <audio controls>
+        <source src="songs/song15.mp3" type="audio/mpeg">
+      </audio>
+
+<div class="lyrics-content" style="display:none;">
+<p>'Tong alay kong harana, para sa dalagang<br>
+    Walang kasingganda, amoy-rosas ang halimuyak<br>
+    Kung nanaisin ng tadhanang mapanlinlang<br>
+    'Di hahayaang mawala pa</p>
+    
+    <p>'Tong liham na umaasang mata mo ang makabasa<br>
+    Handang gawin lahat, maging pamilya'y liligawan<br>
+    Ngayon lang nakadama ng wagas na pagkamangha<br>
+    Hiling ko lang naman na</p>
+    
+    <p>Tayo na sanang dalawa ang siyang huli at ang umpisa<br>
+    Papatunayang ang unang pag-ibig ay 'di mawawala<br>
+    Nakailang tula na, ba't tila 'di napupuna?<br>
+    Ang tangi kong hiling, hanggang dulo ikaw ang kapiling<br>
+    Kung puwede lang, hanggang pangmagpakailanman<br>
+    Hinding-hindi na papakawalan kailanman</p>
+    
+    <p>Ang dating tamis ng pagsasama, nasa'n na? (Hinahanap-hanap ka, whoa)<br>
+    Ba't sa 'ting dal'wa, ako na lang ang natira? (Sana'y magkita pa)<br>
+    Tinig mong kay ganda, maririnig pa ba?<br>
+    Handang tahaking mag-isa kahit wala ka na</p>
+    
+    <p>Kung nasa'n ka man, nawa ay masaya ka na (palalayain ka, whoa)<br>
+    Kahit na 'di na tayo magsasama pa (mahal pa rin kita)<br>
+    Dinggin mo lang ang hiling na mag-iingat ka<br>
+    Oh, Leonora kong sinta, ah</p>
+  </div>
+
+      <button class="lyrics-btn" onclick="showLyricsFromDiv(this)">Show Lyrics</button>
+    </div>
+
+  </div>
+
+  <!-- MOVIE -->
+  <div class="movie-card">
+    <img src="movies/ced.jpg" alt="Movie Poster">
+    <video id="movieTrailer" controls>
+      <source src="movies/ced.mp4" type="video/mp4">
+    </video>
+
+    <div class="lyrics-content" style="display:none;">
+<p>Title: White Chicks (stylized as WHiTE CHiCKS)</p>
+    
+    <p>Year: 2004<br>
+    Genre: American buddy cop action comedy film</p>
+    
+    <p>Director: Keenen Ivory Wayans<br>
+    Writers: Keenen Ivory Wayans, Xavier Cook, Andy McElfresh, Michael Anthony Snowden (screenplay co-written); Marlon Wayans and Shawn Wayans (additional contributions).</p>
+    
+    <p>Starring: Marlon Wayans, Shawn Wayans, Jaime King, Frankie Faison, Lochlyn Munro, and John Heard.</p>
+    
+    <p>Synopsis: Two black FBI agent brothers go undercover as white women using elaborate whiteface prosthetics to protect two hotel heiresses from a kidnapping plot targeting socialites.</p>
+    
+    <p>Filming Locations: Chilliwack and Victoria in British Columbia, and The Hamptons in New York.</p>
+    
+    <p>Reception: Released on June 23, 2004. The film received generally negative reviews upon release and was nominated for five Golden Raspberry Awards, including Worst Picture. Despite this, it was a commercial success, grossing over $113.1 million worldwide, and has since been regarded as a cult classic.</p>
+  </div>
+
+    <button class="movie-btn" onclick="showLyricsFromDiv(this)">More Info</button>
+  </div>
+</div>
+
+<!-- FLOATING PANEL -->
+<div id="lyricsPanel" class="lyrics-panel">
+  <button class="close-lyrics" onclick="closeLyrics()">✕</button>
+  <h2 id="lyricsTitle"></h2>
+  <div id="lyricsText"></div>
+</div>
+
+<script>
+const toggleBtn = document.getElementById('theme-toggle');
+const mainContent = document.getElementById("mainContent");
+const lyricsPanel = document.getElementById("lyricsPanel");
+
+/* Load theme */
+if(localStorage.getItem("theme") === "dark") {
+  document.body.classList.add("dark-mode");
+  toggleBtn.textContent = "☀️";
+}
+
+toggleBtn.addEventListener("click", () => {
+  document.body.classList.toggle("dark-mode");
+  const isDark = document.body.classList.contains("dark-mode");
+  toggleBtn.textContent = isDark ? "☀️" : "🌙";
+  localStorage.setItem("theme", isDark ? "dark" : "light");
+  updateLyricsPanelTheme();
+});
+
+function updateLyricsPanelTheme() {
+  if(document.body.classList.contains("dark-mode")) {
+    lyricsPanel.classList.add("dark-mode");
+  } else {
+    lyricsPanel.classList.remove("dark-mode");
+  }
+}
+
+function showLyricsFromDiv(button){
+  const contentDiv = button.previousElementSibling;
+  const title = button.classList.contains("lyrics-btn") 
+                ? button.parentElement.querySelector(".song-title").textContent 
+                : "Movie Info";
+  document.getElementById("lyricsTitle").textContent = title;
+  document.getElementById("lyricsText").innerHTML = contentDiv.innerHTML;
+
+  lyricsPanel.classList.add("active");
+  mainContent.classList.add("blur");
+  updateLyricsPanelTheme();
+}
+
+function closeLyrics(){
+  lyricsPanel.classList.remove("active");
+  mainContent.classList.remove("blur");
+}
+
+// Select all audio players
+const allAudios = document.querySelectorAll("audio");
+
+// Select your movie trailer video  (CHANGE the ID if yours is different)
+const movieVideo = document.getElementById("movieTrailer");
+
+// --- Pause all other audio when one plays ---
+allAudios.forEach(audio => {
+  audio.addEventListener("play", () => {
+
+    // Pause all other audio
+    allAudios.forEach(other => {
+      if (other !== audio) {
+        other.pause();
+      }
+    });
+
+    // Pause video trailer when a song plays
+    if (movieVideo) {
+      movieVideo.pause();
+    }
+  });
+});
+
+
+// --- Pause ALL audio when the movie trailer plays ---
+if (movieVideo) {
+  movieVideo.addEventListener("play", () => {
+
+    allAudios.forEach(a => a.pause());
+  });
+}
+</script>
+
+</body>
+</html>

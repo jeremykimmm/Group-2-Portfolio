@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Member Portfolio - Grace</title>
+<link rel="stylesheet" href="styles.css">
+
+<style>
+/* --- Root colors --- */
+:root {
+  --text-color: #2B2B2B;
+  --bg-color: #f0f0f0;
+  --tab-bg: linear-gradient(90deg,#ccc,#eee);
+  --tab-text-color: #2B2B2B;
+  --about-bg: linear-gradient(135deg,#f5f5f5,#ddd);
+  --skill-text-color: #2B2B2B;
+}
+
+/* --- Dark mode --- */
+.dark-mode {
+  --text-color: #000;
+  --tab-text-color: #000;
+  --tab-bg: linear-gradient(90deg,#999,#bbb);
+  --about-bg: #d3d3d3;
+  --skill-text-color: #fff;
+  background: linear-gradient(45deg, #4b000f, #1c1c1c, #2a2a2a, #5a0a0a);
+  transition: background 0.4s ease, color 0.4s ease;
+}
+
+/* --- Base styles --- */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  background: var(--bg-color);
+  color: var(--text-color);
+  transition: background 0.3s ease, color 0.3s ease;
+  padding: 40px 20px;
+}
+
+/* --- Container layout --- */
+.container {
+  display: flex;
+  max-width: 1200px;
+  margin: 40px auto;
+  border-radius: 16px;
+  overflow: hidden;
+  flex-wrap: wrap;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+}
+
+/* --- Sidebar --- */
+.sidebar {
+  flex: 0 0 280px;
+  background: linear-gradient(180deg, #800000, #b22222);
+  color: #fff;
+  padding: 40px 20px;
+  text-align: center;
+}
+.sidebar img {
+  width: 140px; height: 140px;
+  border-radius: 50%;
+  border: 4px solid #fff;
+  margin-bottom: 20px;
+  object-fit: cover;
+}
+.sidebar h1 { font-size: 24px; margin-bottom: 5px; color: #fff; }
+.sidebar p { font-size: 16px; margin-bottom: 20px; color: #ddd; }
+.sidebar .back-link {
+  display: inline-block;
+  padding: 10px 16px;
+  border-radius: 10px;
+  background: linear-gradient(90deg, #f5f5f5, #ccc);
+  color: #800000;
+  text-decoration: none;
+  font-weight: bold;
+  transition: 0.3s ease;
+}
+.sidebar .back-link:hover { background: linear-gradient(90deg,#ddd,#bbb); }
+
+/* --- Main content --- */
+.main { flex: 1; padding: 40px 30px; }
+
+/* --- Tabs --- */
+.tabs {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 30px;
+}
+.tab-button {
+  flex: 1;
+  padding: 12px 20px;
+  background: var(--tab-bg);
+  border: none;
+  border-radius: 12px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+  color: var(--tab-text-color);
+}
+.tab-button.active { 
+  background: linear-gradient(90deg,#800000,#b22222);
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+.tab-button:hover { opacity: 0.85; }
+
+/* --- Tab content --- */
+.tab-content { display: none; animation: fadeIn 0.4s ease-in-out; }
+.tab-content.active { display: block; }
+
+/* --- About card --- */
+.about-card {
+  background: var(--about-bg);
+  padding: 25px;
+  border-radius: 12px;
+  line-height: 1.6;
+  color: var(--text-color);
+  font-size: 1rem;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  transition: background 0.3s ease, color 0.3s ease;
+}
+.contacts {
+  margin-top: 20px;
+  padding-top: 15px;
+  border-top: 1px solid #ccc;
+}
+.contacts p, .contacts a {
+  margin: 6px 0;
+  color: var(--text-color);
+  text-decoration: none;
+}
+.contacts a:hover { text-decoration: underline; }
+
+/* --- Skills grid --- */
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(4,1fr);
+  gap: 30px;
+  justify-items: center;
+  margin-top: 20px;
+}
+.skill-card img {
+  width: 80px; height: 80px; border-radius: 50%; padding: 15px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.skill-card img:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 15px 4px #b22222;
+}
+.skill-card .skill-name {
+  color: var(--skill-text-color);
+  margin-top: 10px;
+  font-weight: bold;
+  transition: color 0.3s ease;
+}
+
+/* --- Projects grid --- */
+.projects-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(220px,1fr)); gap: 20px; }
+.project-card { position: relative; overflow: hidden; border-radius: 12px; background: linear-gradient(135deg,#ccc,#eee);}
+.project-card img { width:100%; display:block; }
+.project-desc {
+  position:absolute; bottom:0; left:0; right:0;
+  background: linear-gradient(135deg, rgba(128,0,0,0.85), rgba(178,34,34,0.85));
+  color:#fff; padding:12px; font-size:0.9rem; text-align:center;
+  transform: translateY(100%); transition: transform 0.3s;
+}
+.project-card:hover .project-desc { transform: translateY(0); }
+
+/* --- Scroll top button --- */
+#scrollTopBtn {
+  position: fixed; bottom:20px; right:20px; display:none;
+  background: linear-gradient(90deg,#800000,#b22222);
+  color:white; border:none; padding:12px 16px; border-radius:50%;
+  font-size:18px; cursor:pointer; box-shadow:0 5px 15px rgba(0,0,0,0.3);
+}
+#scrollTopBtn:hover { background: linear-gradient(90deg,#b22222,#800000); }
+
+/* --- Responsive --- */
+@media(max-width:900px){ .container{ flex-direction: column;} .sidebar{ flex:1; } }
+@media(max-width:768px){ .skills-grid{ grid-template-columns: repeat(2,1fr);} }
+@media(max-width:500px){ .skills-grid{ grid-template-columns: 1fr;} .skill-card img{ width:60px;height:60px;padding:10px;} }
+
+/* --- Animations --- */
+@keyframes fadeIn { from { opacity:0; transform:translateY(15px);} to { opacity:1; transform:translateY(0); } }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <img src="images/profile4.png" alt="Profile">
+    <h1>Ted Joaquim Gabriel L. de Gala</h1>
+    <p>Member</p>
+    <p>His strong sense of aesthetics and analytical mindset allows him to produce work that is both visually striking and conceptually meaningful.</p>
+    <a href="member-profile.html" class="back-link">Back</a>
+  </div>
+
+  <!-- Main content -->
+  <div class="main">
+    <div class="tabs">
+      <button class="tab-button active" data-tab="about">About Me</button>
+      <button class="tab-button" data-tab="skills">Skills</button>
+      <button class="tab-button" data-tab="projects">Projects</button>
+    </div>
+
+    <div class="tab-content active" id="about">
+      <div class="about-card">
+        <p>Ted Joaquim Gabriel Lomibao de Gala is a passionate and innovative individual with a keen eye for artistic expression. As a digital artist and guitarist, he channels his creativity into unique projects that communicate ideas and evoke emotion. Ted’s dedication to originality and his meticulous attention to detail underscore his ability to critically analyze and refine his work. His drive to explore new concepts makes him a forward-thinking contributor to any creative or collaborative environment.</p>
+
+        <div class="contacts">
+          <h3>Contacts</h3>
+          <p><strong>Ted Joaquim Gabriel L. de Gala</strong></p>
+      <p>Twitter (X): </p>
+      <p><a href="https://x.com/yuiosannisontwt?t=aYbZzxtP62wG7lZ7tuagAg&s=09" target="_blank">yuiosann_</a></p>
+      <p>Instagram: </p>
+      <p><a href="https://www.instagram.com/ripyuiosann?igsh=bWIydTBzNXRmdDFx" target="_blank">ripyuiosann</a></p>
+      <p>Tiktok: </p>
+      <p><a href="https://www.tiktok.com/@yuiosann_?_r=1&_t=ZS-91dwwk4Zlcy" target="_blank">yuiosann_</a></p>
+          <p>Email: <a href="mailto:gab@gmail.com">gab@gmail.com</a></p>
+        </div>
+
+            <div class="favorites-link-section" style="text-align:center; margin-top: 30px;">
+  <h2 style="font-size:1.8rem; color:#800000; margin-bottom:10px;">Media Favorites</h2>
+  <p style="font-size:1rem; color:#2B2B2B; margin-bottom:15px;">
+    Check out my favorite songs that define my vibe and my top movie trailer that inspires me.
+  </p>
+  <a href="group-favorites3.html" class="back-link" 
+     style="background: linear-gradient(90deg,#800000,#b22222); 
+            color:#fff; padding:12px 20px; border-radius:12px; font-weight:bold; text-decoration:none; transition:0.3s;">
+    🎵 Explore Favorites
+  </a>
+</div>
+      </div>
+    </div>
+
+    <div class="tab-content" id="skills">
+      <div class="skills-grid">
+        <div class="skill-card"><img src="images/icons/data.png"><div class="skill-name">Data Analysis</div></div>
+        <div class="skill-card"><img src="images/icons/detail.png"><div class="skill-name">Detail-Oriented</div></div>
+        <div class="skill-card"><img src="images/icons/art.png"><div class="skill-name">Creativity</div></div>
+        <div class="skill-card"><img src="images/icons/critical-thinking.png"><div class="skill-name">Critical Thinking</div></div>
+      </div>
+    </div>
+
+    <div class="tab-content" id="projects">
+      <div class="projects-grid">
+        <div class="project-card"><img src="images/project_ted1.jpg"><div class="project-desc">Project 1: Digital Illustration Series</div></div>
+        <div class="project-card"><img src="images/project_ted2.jpg"><div class="project-desc">Project 2: Music Video Artwork</div></div>
+        <div class="project-card"><img src="images/project_ted3.webp"><div class="project-desc">Project 3: Interactive Art Installation</div></div>
+        <div class="project-card"><img src="images/project_ted4.jpg"><div class="project-desc">Project 4: Guitar Performance Visuals</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<button id="scrollTopBtn">↑ Top</button>
+
+<script>
+// --- Tabs ---
+const tabs = document.querySelectorAll('.tab-button');
+const contents = document.querySelectorAll('.tab-content');
+tabs.forEach(tab => {
+  tab.addEventListener('click', () => {
+    const target = tab.dataset.tab;
+    tabs.forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    contents.forEach(c => c.classList.remove('active'));
+    document.getElementById(target).classList.add('active');
+  });
+});
+
+// --- Scroll top button ---
+const scrollBtn = document.getElementById('scrollTopBtn');
+window.onscroll = () => scrollBtn.style.display = (window.scrollY>300)?'block':'none';
+scrollBtn.onclick = () => window.scrollTo({top:0,behavior:'smooth'});
+
+// --- Theme toggle ---
+const toggleBtn = document.getElementById('theme-toggle');
+const icon = document.getElementById('theme-icon');
+
+if(localStorage.getItem("theme") === "dark") {
+  document.body.classList.add("dark-mode");
+  icon.textContent = "☀️";
+} else {
+  document.body.classList.remove("dark-mode");
+  icon.textContent = "🌙";
+}
+
+toggleBtn.addEventListener("click", () => {
+  document.body.classList.toggle("dark-mode");
+  const isDark = document.body.classList.contains("dark-mode");
+  icon.textContent = isDark ? "☀️" : "🌙";
+  localStorage.setItem("theme", isDark ? "dark" : "light");
+});
+</script>
+
+</body>
+</html>
